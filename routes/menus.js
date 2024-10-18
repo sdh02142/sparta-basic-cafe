@@ -59,6 +59,77 @@ router.get('/', async (req, res, next) => {
         //     }
         // ]
     });
+
+    router.get('/:menuId', async (req, res, next) => {
+        const id = Number(req.params.menuId);
+    
+        const menu = await prisma.menu.findUnique({
+            where: { id: id },
+        });
+
+        res.status(200).json({
+            menu,
+        });
+    });
+    
+    router.post('/', async (req, res, next) => {
+        const name = req.body.name;
+        const type = req.body.type;
+        const temperature = req.body.temperature;
+        const price = Number(req.body.price);
+    
+        await prisma.menu.create({
+            data: {
+                name: name,
+                type: type,
+                temperature: temperature,
+                price: price,
+            },
+        });
+
+        res.status(201).json({
+            message: '메뉴 생성되었습니다.',
+            menu: {
+                name: name,
+                type: type,
+                temperature: temperature,
+                price: price,
+            }
+        });
+    });
+    
+    router.put('/:menuId', async (req, res, next) => {
+        const id = Number(req.params.menuId);
+        const name = req.body.name;
+        const type = req.body.type;
+        const temperature = req.body.temperature;
+        const price = Number(req.body.price);
+    
+        await prisma.menu.update({
+            where: { id: id },
+            data: {
+                name: name,
+                type: type,
+                temperature: temperature,
+                price: price,
+            },
+        });
+    
+        res.status(200).json({
+            message: `메뉴 ${id} 수정되었습니다.`
+        });
+    });
+    
+    router.delete('/:menuId', async (req, res, next) => {
+        const id = Number(req.params.menuId);
+        await prisma.menu.delete({
+            where: { id: id },
+        });
+    
+        res.status(200).json({
+            message: `메뉴 ${id} 삭제되었습니다.`
+        });
+    });
 });
 
 export default router;
