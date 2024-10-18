@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Menu {
+  id          Int     @id @default(autoincrement())
+  name        String
+  type        String
+  temperature String
+  price       Float
+
+  orders      OrderHistory[]
+}
+
+model OrderHistory {
+  id          Int     @id @default(autoincrement())
+  menu_id     Int
+  menu        Menu    @relation(fields: [menu_id], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id                     Int           @id @default(autoincrement())
+  userId                 String        @unique
+  password               String
+  name                   String
+
+  characters             Character[]
+}
+
+model Character {
+  id                     Int           @id @default(autoincrement())
+  userId                 String
+  itemId                 Int
+  nickname               String        @unique
+  hp                     Int           @default(100)
+  atk                    Int           @default(10)
+  money                  Int           @default(30000)
+
+  inventory              Item          @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user                   User          @relation(fields: [userId], references: [userId], onDelete: Cascade)
+}
+
+model Item {
+  id                     Int           @id @default(autoincrement())
+  name                   String
+  hp                     Int           @default(0)
+  atk                    Int           @default(0)
+  price                  Int           @default(0)
+  createdAt              DateTime      @default(now())
+  
+  characterInventory     Character[]
+}
