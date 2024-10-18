@@ -16,11 +16,11 @@ router.get('/stats', async (req, res, next) => {
         },
     });
 
-    var toMe = 0;
+    var toOr = 0;
     for(let i = 0; i < total.length; i++){
-        toMe = toMe + total[i]['_count']['menu_id'];
+        toOr = toOr + total[i]['_count']['menu_id'];
     };
-    const toOr = total.length;
+    const toMe = total.length;
 
     console.log(toMe);
     console.log(toOr);
